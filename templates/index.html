@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SSL Checker</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        function startCountdown() {
+            var countdownElement = document.getElementById('countdown');
+            var countdown = 30;
+
+            setInterval(function() {
+                countdown--;
+                countdownElement.textContent = countdown;
+
+                if (countdown <= 0) {
+                    countdown = 30;
+                }
+            }, 1000);
+        }
+    </script>
+</head>
+<body onload="startCountdown()">
+    <h1>SSL Checker</h1>
+    <table border="1">
+        <tr>
+            <th>Domain</th>
+            <th>Expiry Date</th>
+            <th>Days Left</th>
+            <th>Status</th>
+            <th>Uptime</th>
+            <th>Uptime Percentage (30 days)</th>
+        </tr>
+        {% for result in results %}
+        <tr>
+            <td>{{ result.domain }}</td>
+            <td>{{ result.expiry_date if not result.error else 'N/A' }}</td>
+            <td>{{ result.days_left if not result.error else 'N/A' }}</td>
+            <td>{{ 'Valid' if not result.error else 'Error: ' + result.error }}</td>
+            <td>{{ 'UP' if result.is_up else 'DOWN' }}</td>
+            <td>{{ result.uptime_percentage }}%</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <p>Next check in: <span id="countdown">30</span> seconds</p>
+</body>
+</html>
